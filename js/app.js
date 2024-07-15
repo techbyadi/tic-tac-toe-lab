@@ -23,6 +23,8 @@ const squareEls = document.querySelectorAll('.sqr');
 //console.log(squareEls);
 const messageEl = document.getElementById('message');
 //console.log(messageEl);
+const resetButtonEl = document.getElementById('reset');
+//console.log(resetButtonEl);
 
 /*-------------------------------- Functions --------------------------------*/
 
@@ -38,7 +40,7 @@ function init() {
 }
 
 function render(){
-  console.log('I am a render function');
+  //console.log('I am a render function');
   updateBoard();
   updateMessage();
 }
@@ -71,17 +73,20 @@ function updateMessage() {
 
 
 function handleClick(event){
-    console.log(event.target);
+    //console.log(event.target);
     const squareIndex = parseInt(event.target.id);
-    if(board[squareIndex === 'X' || board[squareIndex] === 'O' || winner === true]){
+    if(board[squareIndex] === 'X' || board[squareIndex] === 'O' || winner){
       return;
     }
     placePiece(squareIndex);
     //check for winner
     checkForWinner();
-    console.log('Winner:', winner);
-    render();
+    //console.log('Winner:', winner);
+    //check for tie
+    checkForTie();
     //change the turn
+    switchPlayerTurn();
+    render();
 }
 
 function placePiece(index){
@@ -103,6 +108,25 @@ function checkForWinner() {
   }
 }
 
+function checkForTie(){
+  if(winner) return;
+  if(!board.includes('')){
+    tie = true;
+  }
+}
+
+function switchPlayerTurn(){
+  if (winner) {
+    return;
+  } 
+  // if (turn === 'X') {
+  //   turn = 'O';
+  // }
+  // else {
+  //   turn = 'X';
+  // }
+  turn = turn === 'X' ? 'O' : 'X';
+}
 
 /*----------------------------- Event Listeners -----------------------------*/
 
@@ -110,6 +134,8 @@ function checkForWinner() {
 squareEls.forEach((squareEl) => {
     squareEl.addEventListener('click', handleClick); 
 })
+
+resetButtonEl.addEventListener('click', init);
 
 //1) Define the required variables used to track the state of the game.
 
