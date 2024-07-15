@@ -1,8 +1,15 @@
 /*-------------------------------- Constants --------------------------------*/
 
 //console.log('I am app.js');
-
-
+const winningCombos = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]];
 
 
 
@@ -23,7 +30,7 @@ init();
 
 function init() {
   //console.log('The app has loaded: Starting point');
-  board = ['', 'X', '', '', 'O', '', '', '', ''];
+  board = ['', '', '', '', '', '', '', '', ''];
   turn = 'X';
   winner = false;
   tie = false;
@@ -33,6 +40,7 @@ function init() {
 function render(){
   console.log('I am a render function');
   updateBoard();
+  updateMessage();
 }
 
 function updateBoard() {
@@ -46,13 +54,62 @@ function updateBoard() {
     } else {
       squareEls[idx].textContent = '';
     }
-
     //squareEls[idx].textContent = cell;
     //console.log(cell);
   })
 }
 
+function updateMessage() {
+  if(winner === false && tie === false){
+    messageEl.textContent = `It is ${turn}'s turn`;
+  } else if (winner === false && tie === true){
+    messageEl.textContent = `Cat's game. It's a tie!`;
+  } else {
+    messageEl.textContent = `${turn} wins the game`;
+  }
+}
+
+
+function handleClick(event){
+    console.log(event.target);
+    const squareIndex = parseInt(event.target.id);
+    if(board[squareIndex === 'X' || board[squareIndex] === 'O' || winner === true]){
+      return;
+    }
+    placePiece(squareIndex);
+    //check for winner
+    checkForWinner();
+    console.log('Winner:', winner);
+    render();
+    //change the turn
+}
+
+function placePiece(index){
+  board[index] = turn;
+  console.log(board);
+}
+
+function checkForWinner() {
+  if (
+    (board[0] !== '' && board[0] === board[1] && board[0] === board[2]) ||
+    (board[3] !== '' && board[3] === board[4] && board[3] === board[5]) ||
+    (board[6] !== '' && board[6] === board[7] && board[6] === board[8]) ||
+    (board[0] !== '' && board[0] === board[3] && board[0] === board[6]) ||
+    (board[1] !== '' && board[1] === board[4] && board[1] === board[7]) ||
+    (board[2] !== '' && board[2] === board[5] && board[2] === board[8]) ||
+    (board[0] !== '' && board[0] === board[4] && board[0] === board[8]) ||
+    (board[2] !== '' && board[2] === board[4] && board[2] === board[6])) {
+    winner = true;
+  }
+}
+
+
 /*----------------------------- Event Listeners -----------------------------*/
+
+
+squareEls.forEach((squareEl) => {
+    squareEl.addEventListener('click', handleClick); 
+})
 
 //1) Define the required variables used to track the state of the game.
 
